@@ -33,7 +33,7 @@ require("lazy").setup({
     { "junegunn/seoul256.vim", config = function() vim.cmd.colorscheme "seoul256-light" end },
 
     -- import your plugins
-    -- { import = "plugins" },
+    { import = "lennartsfantastischecnofig/plugins" },
   },
   -- Configure any other settings here. See the documentation for more details.
 })
