@@ -10,9 +10,10 @@ vim.opt.tabstop = length
 vim.opt.shiftwidth = length
 vim.opt.softtabstop = length
 
-
 -- Zeilennummern
-vim.opt.number = true
+vim.opt.number = true	-- In Dateien
+vim.g.netrw_bufsettings = 'noma nomod nu nowrap ro nobl'	-- Im Explorer
+
 vim.opt.relativenumber = true -- zeigt relative Zeilennummer von der Position vom cursor
 
 -- Diagnostics
