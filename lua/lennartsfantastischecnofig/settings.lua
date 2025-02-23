@@ -3,6 +3,11 @@
 -- Misc
 vim.opt.clipboard = "unnamedplus"	-- nvim und sys clipboard sind die selben
 vim.opt.termguicolors = true	-- aktiviert termguicolors
+vim.opt.hlsearch = true		-- zeigt ALLE Ergebnisse in Datei an wenn 'true'
+vim.opt.incsearch = true	-- incremental search (zeigt Suchergebnisse beim schreiben an)
+vim.opt.scrolloff = 7
+vim.opt.updatetime = 50
+vim.opt.colorcolumn = "112"
 
 -- indentation
 local length = 4
