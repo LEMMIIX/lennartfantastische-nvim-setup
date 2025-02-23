@@ -18,3 +18,14 @@ vim.opt.relativenumber = true -- zeigt relative Zeilennummer von der Position vo
 
 -- Diagnostics
 vim.api.nvim_set_hl(0, 'DiagnosticWarn', { fg = '#d78700' })	-- Setzt WARN Farbe auf orange
+
+local statusline = {
+	'%t',
+	'%=',
+	'%-5{%v:lua.vim.api.nvim_get_mode().mode%}',
+	'%=',
+	'%{&filetype}',
+	' %3l:%-2c ',
+}
+
+vim.o.statusline = table.concat(statusline,'')
