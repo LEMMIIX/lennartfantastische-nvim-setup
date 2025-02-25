@@ -1,40 +1,58 @@
 local M = {}
 
--- Define highlight groups directly in the module
-vim.api.nvim_set_hl(0, 'GitBranchNormal', { fg = '#88b493' })
-vim.api.nvim_set_hl(0, 'GitBranchDetached', { fg = '#ee6600' })
+-- Store the branch cache and initialized state
+M.branch_cache = nil
+M.initialized = false
 
-local branch_cache = nil  -- Stores the branch result
-
-local function get_git_branch()
-	if branch_cache ~= nil then
-		return branch_cache  -- Return cached value
+-- Asynchronously get git branch information
+local function async_get_git_branch()
+	-- Skip if already initialized
+	if M.initialized then
+		return
 	end
 
-	local handle = io.popen('git rev-parse --abbrev-ref HEAD 2> '..(vim.fn.has('win32') == 1 and 'nul' or '/dev/null'))
-	if not handle then
-		branch_cache = ''
-		return ''
-	end
+	-- Mark as initialized to prevent multiple calls
+	M.initialized = true
 
-	local branch = handle:read('*a'):gsub('\n', '')
-	handle:close()
+	-- Get the appropriate null device for the platform
+	local null_device = vim.fn.has('win32') == 1 and 'nul' or '/dev/null'
+	local cmd = {'git', 'rev-parse', '--abbrev-ref', 'HEAD'}
 
-	if branch == 'HEAD' then
-		branch = '###DETACHED HEAD###'
-	elseif branch ~= '' then
-		branch = '⑂ ('..branch..')'
-	else
-		branch = '---' -- Optional branch icon
-	end
+	-- Start async job to check branch
+	vim.fn.jobstart(cmd, {
+		on_stdout = function(_, data, _)
+			if not data or #data < 1 or (data[1] == "" and #data == 1) then
+				return
+			end
 
-	branch_cache = branch  -- Cache the result
-	return branch
+			local branch = data[1]:gsub('\n', '')
+
+			if branch == 'HEAD' then
+				M.branch_cache = '###DETACHED HEAD###'
+			elseif branch ~= '' then
+				M.branch_cache = '⑂ (' .. branch .. ')'
+			end
+		end,
+		on_exit = function(_, exit_code)
+			-- Only set to "not a git repo" if we haven't already set it and the command failed
+			if exit_code ~= 0 and M.branch_cache == nil then
+				M.branch_cache = "(not a git repo)"
+			end
+		end,
+		stdout_buffered = true
+	})
 end
 
--- Expose through v:lua
+-- Expose for statusline
 function _G.git_branch_status()
-	return get_git_branch()
+	-- Initialize on first call if not already done
+	if not M.initialized then
+		async_get_git_branch()
+		return ""  -- Return empty string initially instead of a loading message
+	end
+
+	-- Return cache or empty string
+	return M.branch_cache or ""
 end
 
 return M
