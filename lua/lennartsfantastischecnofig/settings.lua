@@ -27,7 +27,10 @@ vim.api.nvim_set_hl(0, 'DiagnosticWarn', { fg = '#d78700' })	-- Setzt WARN Farbe
 -- Statusline
 require('lennartsfantastischecnofig.stl_gitbranch')
 
+vim.cmd('highlight Statusline guibg=#e3ad98')
+
 local statusline = {
+	'%#Statusline#',
 	'%t',
 	'%=',
 	'%-5{%v:lua.vim.api.nvim_get_mode().mode%}',
