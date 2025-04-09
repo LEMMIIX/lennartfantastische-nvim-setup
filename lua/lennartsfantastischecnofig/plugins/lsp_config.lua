@@ -10,6 +10,10 @@ return {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/nvim-cmp",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
 		},
 
 		config = function()
@@ -33,7 +37,31 @@ return {
 				handlers = {
 					function (server_name)
 						--print("setting up ", server_name)		-- Kontrollprint zum Testen welche language server geladen werden
-						require("lspconfig")[server_name].setup {}
+
+						if server_name == "clangd" then
+							-- Spezielle Konfiguration für clangd mit Qt-Unterstützung
+							require("lspconfig").clangd.setup({
+								capabilities = capabilities,
+								cmd = {
+									"clangd",
+									"--background-index",
+									"--clang-tidy",
+									"--header-insertion=iwyu",
+									"--completion-style=detailed",
+									"--suggest-missing-includes",
+									-- Qt-spezifische Flags
+									"--query-driver=K:/Qt/Tools/mingw1120_64/bin/g++.exe",
+								},
+								filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h", "ui" },
+								root_dir = function(fname)
+									return require('lspconfig').util.root_pattern('CMakeLists.txt', 'compile_commands.json', '.git')(fname) or vim.fn.getcwd()
+								end,
+							})
+						else
+        require("lspconfig")[server_name].setup {
+            capabilities = capabilities,
+        }
+    end
 					end,
 				}
 			})
