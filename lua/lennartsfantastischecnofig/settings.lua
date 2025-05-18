@@ -42,3 +42,11 @@ local statusline = {
 }
 
 vim.o.statusline = table.concat(statusline,'')
+
+-- Reset terminal colors on exit
+vim.api.nvim_create_autocmd("VimLeave", {
+	callback = function()
+		vim.opt.guicursor = "a:block-blinkon0"
+		os.execute("printf '\033[0m'")  -- Reset terminal colors
+	end,
+})
