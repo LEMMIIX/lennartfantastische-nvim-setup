@@ -33,6 +33,8 @@ return {
 					"lua_ls",
 					"clangd",
 				},
+				automatic_installation = false,
+				automatic_enable = false,
 
 				handlers = {
 					function (server_name)
