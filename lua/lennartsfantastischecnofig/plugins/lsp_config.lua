@@ -32,7 +32,7 @@ return {
 					ensure_installed = {
 						"lua_ls",
 						"clangd",
-						"tsserver",
+						"ts_ls",
 						"angularls",
 						"eslint",
 					},
