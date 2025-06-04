@@ -11,3 +11,6 @@ vim.keymap.set("x", "<leader>p", "\"_dP")
 
 -- scheiß Hexenwerk - ausgewähltes Wort lässt simultan alle Vorkommnisse gleichzeitig bearbeiten
 vim.keymap.set("n", "<leader>fr", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+
+-- Fehlermeldung anzeigen
+vim.keymap.set("n", "D", vim.diagnostic.open_float, opts)

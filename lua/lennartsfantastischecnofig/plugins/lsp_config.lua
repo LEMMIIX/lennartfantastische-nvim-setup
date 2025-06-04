@@ -33,8 +33,8 @@ return {
 					"lua_ls",
 					"clangd",
 				},
-				automatic_installation = false,
-				automatic_enable = false,
+				automatic_installation = true,
+				automatic_enable = true,
 
 				handlers = {
 					function (server_name)
@@ -52,9 +52,9 @@ return {
 									"--completion-style=detailed",
 									"--suggest-missing-includes",
 									-- Qt-spezifische Flags
-									"--query-driver=K:/Qt/Tools/mingw1120_64/bin/g++.exe",
+									-- "--query-driver=K:/Qt/Tools/mingw1120_64/bin/g++.exe",
 								},
-								filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h", "ui" },
+								filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h", },
 								root_dir = function(fname)
 									return require('lspconfig').util.root_pattern('CMakeLists.txt', 'compile_commands.json', '.git')(fname) or vim.fn.getcwd()
 								end,
