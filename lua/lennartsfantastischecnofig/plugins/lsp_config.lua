@@ -27,79 +27,107 @@ return {
 
 
 
-			require("mason").setup()
-			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"lua_ls",
-					"clangd",
-				},
-				automatic_installation = true,
-				automatic_enable = true,
+				require("mason").setup()
+				require("mason-lspconfig").setup({
+					ensure_installed = {
+						"lua_ls",
+						"clangd",
+						"tsserver",
+						"angularls",
+						"eslint",
+					},
+					automatic_installation = true,
+					automatic_enable = true,
 
-				handlers = {
-					function (server_name)
-						--print("setting up ", server_name)		-- Kontrollprint zum Testen welche language server geladen werden
+					handlers = {
+						function (server_name)
+							--print("setting up ", server_name)		-- Kontrollprint zum Testen welche language server geladen werden
 
-						if server_name == "clangd" then
-							-- Spezielle Konfiguration für clangd mit Qt-Unterstützung
-							require("lspconfig").clangd.setup({
-								capabilities = capabilities,
-								cmd = {
-									"clangd",
-									"--background-index",
-									"--clang-tidy",
-									"--header-insertion=iwyu",
-									"--completion-style=detailed",
-									"--suggest-missing-includes",
-									-- Qt-spezifische Flags
-									-- "--query-driver=K:/Qt/Tools/mingw1120_64/bin/g++.exe",
-								},
-								filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h", },
-								root_dir = function(fname)
-									return require('lspconfig').util.root_pattern('CMakeLists.txt', 'compile_commands.json', '.git')(fname) or vim.fn.getcwd()
+							if server_name == "clangd" then
+								-- Spezielle Konfiguration für clangd mit Qt-Unterstützung
+								require("lspconfig").clangd.setup({
+									capabilities = capabilities,
+									cmd = {
+										"clangd",
+										"--background-index",
+										"--clang-tidy",
+										"--header-insertion=iwyu",
+										"--completion-style=detailed",
+										"--suggest-missing-includes",
+										-- Qt-spezifische Flags
+										-- "--query-driver=K:/Qt/Tools/mingw1120_64/bin/g++.exe",
+									},
+									filetypes = { "c", "cpp", "objc", "objcpp", "hpp", "h", },
+									root_dir = function(fname)
+										return require('lspconfig').util.root_pattern(
+											'CMakeLists.txt',
+											'compile_commands.json', 
+											'.git')(fname) or vim.fn.getcwd()
+										end,
+									})
+
+								elseif server_name == "angularls" then
+									require("lspconfig").angularls.setup({
+										capabilities = capabilities,
+										on_new_config = function(new_config, new_root_dir)
+											new_config.cmd = {
+												"ngserver",
+												"--stdio",
+												"--tsProbeLocations",
+												"",
+												"--ngProbeLocations",
+												""
+											}
+										end,
+										filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx" },
+										root_dir = require("lspconfig.util").root_pattern(
+											"angular.json",
+											"project.json",
+											".git"),
+										})
+
+									else
+										require("lspconfig")[server_name].setup {
+											capabilities = capabilities,
+										}
+									end
+
 								end,
+							}
+						})
+
+						local cmp_select = { behavior = cmp.SelectBehavior.Select }
+
+						cmp.setup({
+							snippet = {
+								expand = function(args)
+									require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+								end,
+							},
+							mapping = cmp.mapping.preset.insert({
+								['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),	-- Vorschlagliste PREVIOUS
+								['<C-n>'] = cmp.mapping.select_next_item(cmp_select),	-- Vorschlagliste NEXT
+								['<C-y>'] = cmp.mapping.confirm({ select = true }),		-- Vorschlag AKZEPTIEREN
+								["<C-Space>"] = cmp.mapping.complete(),
+							}),
+							sources = cmp.config.sources({
+								{ name = 'nvim_lsp' },
+							}, {
+								{ name = 'buffer' },
 							})
-						else
-        require("lspconfig")[server_name].setup {
-            capabilities = capabilities,
-        }
-    end
+						})
+
+						vim.diagnostic.config({
+							-- update_in_insert = true,
+							float = {
+								focusable = false,
+								style = "minimal",
+								border = "rounded",
+								source = "always",
+								header = "",
+								prefix = "",
+							},
+						})
 					end,
 				}
-			})
-
-			local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),	-- Vorschlagliste PREVIOUS
-					['<C-n>'] = cmp.mapping.select_next_item(cmp_select),	-- Vorschlagliste NEXT
-					['<C-y>'] = cmp.mapping.confirm({ select = true }),		-- Vorschlag AKZEPTIEREN
-					["<C-Space>"] = cmp.mapping.complete(),
-				}),
-				sources = cmp.config.sources({
-					{ name = 'nvim_lsp' },
-				}, {
-					{ name = 'buffer' },
-				})
-			})
-
-			vim.diagnostic.config({
-				-- update_in_insert = true,
-				float = {
-					focusable = false,
-					style = "minimal",
-					border = "rounded",
-					source = "always",
-					header = "",
-					prefix = "",
-				},
-			})
-		end,
-	}
-}
+			}
