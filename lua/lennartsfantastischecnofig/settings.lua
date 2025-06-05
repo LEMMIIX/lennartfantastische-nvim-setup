@@ -8,6 +8,7 @@ vim.opt.incsearch = true	-- incremental search (zeigt Suchergebnisse beim schrei
 vim.opt.scrolloff = 7
 vim.opt.updatetime = 50
 vim.opt.colorcolumn = "112"
+vim.cmd('syntax off')
 
 -- indentation
 local length = 4
