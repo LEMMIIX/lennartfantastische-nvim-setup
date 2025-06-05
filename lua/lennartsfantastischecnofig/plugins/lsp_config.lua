@@ -79,7 +79,7 @@ return {
 												""
 											}
 										end,
-										filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx" },
+										filetypes = { "ts", "typescript", "html", "typescriptreact", "typescript.tsx" },
 										root_dir = require("lspconfig.util").root_pattern(
 											"angular.json",
 											"project.json",
