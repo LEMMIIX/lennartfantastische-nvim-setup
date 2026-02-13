@@ -14,13 +14,14 @@ return {
 			"saadparwaiz1/cmp_luasnip",
 			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
+
 		},
 
 		config = function()
 			local cmp = require('cmp')
 			local cmp_lsp = require("cmp_nvim_lsp")
 			local capabilities = vim.tbl_deep_extend(
-				"force",
+			"force",
 				{},
 				vim.lsp.protocol.make_client_capabilities(),
 				cmp_lsp.default_capabilities())
@@ -39,7 +40,6 @@ return {
 				handlers = {
 					function (server_name)
 						--print("setting up ", server_name)		-- Kontrollprint zum Testen welche language server geladen werden
-
 						if server_name == "clangd" then
 							-- Spezielle Konfiguration für clangd mit Qt-Unterstützung
 							require("lspconfig").clangd.setup({
