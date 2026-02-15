@@ -6,7 +6,7 @@ return {
 	opts = {
 		options = {
 			icons_enabled = false,
-			theme = 'seoul256-light',
+			theme = 'seoul256',
 		},
 		sections = {
 			lualine_a = {'mode'},
