@@ -1,5 +1,4 @@
-#
+# neovim
 
-## crazy shortcuts
+![Neovim version](https://img.shields.io/badge/neovim-0.11.6-57A143?logo=neovim)
 
-:s/y/X/g&emsp;- ersetzt in aktueller Zeile alle `y` mit `X`

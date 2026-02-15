@@ -8,7 +8,7 @@ vim.opt.incsearch = true	-- incremental search (zeigt Suchergebnisse beim schrei
 vim.opt.scrolloff = 7
 vim.opt.updatetime = 50
 vim.opt.colorcolumn = "112"
-vim.cmd('syntax off')
+vim.cmd('syntax manual')
 
 -- indentation
 local length = 4
@@ -25,29 +25,3 @@ vim.opt.relativenumber = true -- zeigt relative Zeilennummer von der Position vo
 -- Diagnostics
 vim.api.nvim_set_hl(0, 'DiagnosticWarn', { fg = '#d78700' })	-- Setzt WARN Farbe auf orange
 
--- Statusline
-require('lennartsfantastischecnofig.stl_gitbranch')
-
-vim.cmd('highlight Statusline guibg=#e3ad98')
-
-local statusline = {
-	'%#Statusline#',
-	'%t',
-	'%=',
-	'%-5{%v:lua.vim.api.nvim_get_mode().mode%}',
-	'%{v:lua.git_branch_status()}',
-	'%*',
-	'%=',
-	'%{&filetype}',
-	' %3l:%-2c ',
-}
-
-vim.o.statusline = table.concat(statusline,'')
-
--- Reset terminal colors on exit
-vim.api.nvim_create_autocmd("VimLeave", {
-	callback = function()
-		vim.opt.guicursor = "a:block-blinkon0"
-		os.execute("printf '\033[0m'")  -- Reset terminal colors
-	end,
-})

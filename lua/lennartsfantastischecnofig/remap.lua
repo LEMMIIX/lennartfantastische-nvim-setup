@@ -14,3 +14,9 @@ vim.keymap.set("n", "<leader>fr", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left
 
 -- Fehlermeldung anzeigen
 vim.keymap.set("n", "D", vim.diagnostic.open_float, opts)
+-- Auto-fix
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'LSP Code Action' })
+
+-- GoTo
+vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = false })
+vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent =false })
