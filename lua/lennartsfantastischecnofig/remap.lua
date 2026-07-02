@@ -20,3 +20,9 @@ vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'LSP Code Ac
 -- GoTo
 vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = false })
 vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent =false })
+
+-- resize
+vim.keymap.set('n', '<A-Left>',  '<C-w><', { desc = 'Decrease width' })
+vim.keymap.set('n', '<A-Right>', '<C-w>>', { desc = 'Increase width' })
+vim.keymap.set('n', '<A-Up>',    '<C-w>+', { desc = 'Increase height' })
+vim.keymap.set('n', '<A-Down>',  '<C-w>-', { desc = 'Decrease height' })
