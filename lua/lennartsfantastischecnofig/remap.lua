@@ -11,6 +11,16 @@ vim.keymap.set("x", "<leader>p", "\"_dP")
 
 -- scheiß Hexenwerk - ausgewähltes Wort lässt simultan alle Vorkommnisse gleichzeitig bearbeiten
 vim.keymap.set("n", "<leader>fr", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+-- selbes wie davor aber mit selection in Visual mode
+vim.keymap.set("v", "<leader>fr", function()
+  vim.cmd('noau normal! "sy')
+  local sel = vim.fn.escape(vim.fn.getreg("s"), "/\\")
+  local keys = ":%s/" .. sel .. "/" .. sel .. "/gI<Left><Left><Left>"
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(keys, true, false, true),
+    "n", false
+  )
+end, { desc = "Visual find and replace" })
 
 -- Fehlermeldung anzeigen
 vim.keymap.set("n", "D", vim.diagnostic.open_float, opts)
